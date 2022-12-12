@@ -1,20 +1,21 @@
 """main
 放置API的地方
 """
-from ast import keyword
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
-from jdcrawlers.crawler104 import Crawler104
+from fastapi.responses import JSONResponse, PlainTextResponse
+
+from jdcrawlers.web104 import (Crawler104, TagasSorter, TagsData, TagsFetcher,
+                               Web104Data)
 
 app = FastAPI()
 
 
-@app.get('/{keyword}')
+@app.get('/{keyword}', response_class=PlainTextResponse)
 def home(keyword: str):
     return f'kw is {keyword}'
 
 
-@app.get('/104/{keyword}')
+@app.get('/104/{keyword}', response_class=JSONResponse)
 def crawl_104(keyword: str):
     c = Crawler104(keyword)
     status = c.crawl()
@@ -22,4 +23,13 @@ def crawl_104(keyword: str):
         return {'message': 'Failed', 'detail': status[1]}
     return {'message': 'Successed', 'detail': status[1]}
 
+
+@app.get('/104//tags', response_class=JSONResponse)
+def get_tags():
+    all_tags = TagsData()
+    for data in Web104Data():
+        tags = TagsFetcher(data).tags
+        all_tags.insert(tags)
+    tags_data = all_tags.tags_data
+    return TagasSorter(tags_data).sorted_tags
     
