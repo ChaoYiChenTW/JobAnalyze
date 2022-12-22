@@ -99,7 +99,7 @@ class TagasSorter:
         self._sorted_tags = self._sort_tags()
 
     def _sort_tags(self) -> list:
-        return [(k, v) for k, v in sorted(self.tags_data.items(), key=lambda item: item[1], reverse=True)]
+        return [{'Text': k, 'Value': v} for k, v in sorted(self.tags_data.items(), key=lambda item: item[1], reverse=True)]
 
     @property
     def sorted_tags(self) -> list:
