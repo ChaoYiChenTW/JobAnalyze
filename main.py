@@ -2,27 +2,12 @@
 放置API的地方
 """
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
 
 from jdcrawlers.web104 import (Crawler104, TagasSorter, TagsData, TagsFetcher,
                                Web104Data)
 
 app = FastAPI()
-
-origins = [
-    "http://localhost:3000/"
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=[""],
-    allow_headers=[""],
-)
-
-
 
 @app.get('/{keyword}', response_class=PlainTextResponse)
 def home(keyword: str):
